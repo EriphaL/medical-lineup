@@ -1,0 +1,6 @@
+@import './default/index.less';
+@import 'iconfont/iconfont.css';
+
+[data-theme="black"] {
+  @import './black/index.less';
+}

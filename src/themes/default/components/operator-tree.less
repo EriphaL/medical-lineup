@@ -1,0 +1,39 @@
+.operator-tree-filter-input {
+  width: 180px;
+  // margin-left: 10px;
+}
+.operator-tree-container {
+  max-height: calc(100vh - 310px);
+  overflow-y: scroll;
+  .operator-tree-tempanel-container {
+    margin-top: 10px;
+    .operator-tree-panel-ele {
+      box-sizing: border-box;
+      display: inline-flex;
+      vertical-align: middle;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      color: #666;
+      font-size: 12px;
+      width: 100%;
+    }
+    .operator-tree-panel-ele-custom {
+      text-align: center;
+      position: relative;
+    }
+    .operator-tree-panel-ele-label {
+      position: absolute;
+      width: 130px;
+      left: 20px;
+      display: inline-block;
+      text-align: left;
+    }
+    .operator-tree-panel-ele-img {
+      font-family: 'iconfont';
+      font-size: 15px;
+      font-style: normal;
+    }
+  }
+}

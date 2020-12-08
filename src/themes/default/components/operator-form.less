@@ -1,0 +1,118 @@
+.operator-form-header {
+  color: #72767b;
+  padding: 10px;
+  padding-bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  .operator-form-title {
+    display: inline-block;
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  .operator-form-download-icon {
+    height: 30px;
+    line-height: 30px;
+    margin: 0 10px;
+  }
+  .operator-form-close-btn {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .el-button--mini.is-circle {
+    padding: 2px;
+  }
+}
+.operator-form-collapse {
+  height: 62.5%;
+}
+.operator-form-noCollapse {
+  height: 100%;
+}
+.operator-form-config-preview {
+  .operator-form-config {
+    position: fixed;
+    top: 60px;
+    right: 0px;
+    width: 40%;
+    background-color: #FFFFFF;
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.2), 
+      0 16px 24px 2px rgba(0, 0, 0, 0.14),
+      0 6px 30px 5px rgba(0, 0, 0, 0.12);
+    z-index: 1001;
+    
+    .operator-form-config-content {
+      padding: 10px;
+      height: 100%;
+      .operator-form-config-container {
+        height: 75%;
+        max-height: 80%;
+        overflow-y: scroll;
+        margin-bottom: 10px;
+        position: relative;
+        .operator-form-preview-btn {
+          z-index: 2;
+          position: absolute;
+          right: 0px;
+          top: 5px;
+        }
+      }
+      .operator-form-config-footer {
+        display: flex;
+        justify-content: center;
+        .el-button {
+          width: 20%;
+        }
+      }
+    }
+  }
+  .operator-form-preview {
+    width: 100%;
+    height: 25%;
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    z-index: 1001;
+    background-color: #FFFFFF;
+    box-shadow: 0 8px 10px -5px rgba(0, 0, 0, 0.2),
+      0 16px 24px 2px rgba(0, 0, 0, 0.14),
+      0 6px 30px 5px rgba(0, 0, 0, 0.12);   
+    .operator-form-preview-content {
+      padding: 10px;
+      // height: 100%;
+      height: calc(100% - 10px);
+      .operator-form-config-container {
+        height: calc(100% - 40px);
+        max-height: calc(100% -40px);
+        overflow-y: scroll;
+      }
+    }
+  }
+  .el-table tbody th, .el-table tbody td {
+    padding: 5px 0;
+  }
+  .el-table {
+    .cell {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
+  .el-table--border th:first-child .cell, .el-table--border td:first-child .cell {
+    padding-left: 5px;
+  }
+}
+.operator-form-item {
+  margin-bottom: 10px;
+  .form-label {
+    font-size: 14px;
+    color: #606266;
+    margin: 10px 10px 10px 0;
+    display: inline-block;
+  }
+  .form-content {
+    margin: 0 10px;
+    color: #606266;
+  }
+  .operator-form-item__content {
+    width: 300px;
+  }
+}

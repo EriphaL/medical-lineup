@@ -1,0 +1,188 @@
+{
+    "$schema": "https://lineup.js.org/develop/schema.4.0.0.json",
+    "uid": 12,
+    "selection": [],
+    "aggregations": {
+        "rank0@北京": 0,
+        "rank0@福建": 0,
+        "rank0@湖北": 0,
+        "rank0@内蒙古": 0,
+        "rank0@云南": 0,
+        "rank0@浙江": 0
+    },
+    "rankings": [{
+        "columns": [{
+                "id": "col0",
+                "desc": {
+                    "type": "aggregate",
+                    "label": "Aggregate Groups",
+                    "fixed": true,
+                    "width": 40
+                },
+                "width": 40
+            },
+            {
+                "id": "col1",
+                "desc": {
+                    "type": "rank",
+                    "label": "Rank",
+                    "width": 50
+                },
+                "width": 50
+            },
+            {
+                "id": "col2",
+                "desc": "categorical@省份",
+                "width": 100,
+                "groupRenderer": "catdistributionbar",
+                "loaded": true,
+                "filter": null,
+                "colorMapping": null
+            },
+            {
+                "id": "col4",
+                "desc": "number@跟进时间",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#ff7f0e",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col5",
+                "desc": "number@跟进政策",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 35],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#2ca02c",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col6",
+                "desc": "number@年完成度",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#d62728",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col7",
+                "desc": "number@政策覆盖",
+                "width": 100,
+                "groupRenderer": "histogram",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [5, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#9467bd",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col8",
+                "desc": "number@创新点",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#8c564b",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col9",
+                "desc": "number@部门协同",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 5],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#e377c2",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col10",
+                "desc": "number@类型分",
+                "width": 100,
+                "label": "类型分",
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 1],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#7f7f7f",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col11",
+                "desc": "number@得分",
+                "width": 344,
+                "groupRenderer": "histogram",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 85],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#bcbd22",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            }
+        ],
+        "sortCriteria": [],
+        "groupSortCriteria": [{
+            "asc": true,
+            "sortBy": "col11"
+        }],
+        "groupColumns": ["col2"]
+    }],
+    "showTopN": 10
+}

@@ -1,0 +1,39 @@
+.datasource-tree-filter-input {
+  width: 180px;
+  // margin-left: 10px;
+}
+.datasource-tree-operator-container {
+  max-height: calc(100vh - 310px);
+  overflow-y: scroll;
+  .datasource-tree-itempanel-container {
+    margin-top: 10px;
+    .datasource-tree-panel-ele {
+      box-sizing: border-box;
+      display: inline-flex;
+      vertical-align: middle;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      color: #666;
+      font-size: 12px;
+      width: 100%;
+    }
+    .datasource-tree-panel-ele-custom {
+      text-align: center;
+      position: relative;
+    }
+    .datasource-tree-panel-ele-label {
+      position: absolute;
+      width: 130px;
+      left: 20px;
+      display: inline-block;
+      text-align: left;
+    }
+    .datasource-tree-panel-ele-img {
+      font-family: 'iconfont';
+      font-size: 15px;
+      font-style: normal;
+    }
+  }
+}

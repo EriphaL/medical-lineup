@@ -1,0 +1,23 @@
+{
+  "id": "",
+  "name": "",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "10736546",
+      "name": "circle",
+      "font_class": "circle",
+      "unicode": "e684",
+      "unicode_decimal": 59012
+    },
+    {
+      "icon_id": "11160481",
+      "name": "database",
+      "font_class": "database",
+      "unicode": "e7d6",
+      "unicode_decimal": 59350
+    }
+  ]
+}

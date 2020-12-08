@@ -1,0 +1,35 @@
+.field-operator-wrap {
+  .field-operator-right-wrap {
+    .field-operator-desc {
+      background: #06649D;
+      color: #fff;
+    }
+    .form-group.required > label:before {
+      color: #FF4747;
+    }
+    // input:not(.multiselect__input) {
+    //   background-color: #0C213A;
+    //   color: #ffffff;
+    //   border: 1px solid #4B6685;
+    //   width: 100%;
+    // }
+    .form-group.error {
+      .errors {
+        color: #FF4747 !important;
+      }
+      input:not([type="checkbox"]),
+      .form-group.error select,
+      .form-group.error textarea {
+        border: 1px solid #FF4747 !important;
+        background-color: none !important;
+      }
+    }
+
+    .form-group.error input:not([type="checkbox"]),
+    .form-group.error select,
+    .form-group.error textarea {
+      border: 1px solid #FF4747 !important;
+      background-color: rgba(0, 0, 0, 0) !important;
+    }
+  }
+}

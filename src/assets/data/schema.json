@@ -1,0 +1,219 @@
+{
+    "$schema": "https://lineup.js.org/develop/schema.4.0.0.json",
+    "uid": 12,
+    "selection": [],
+    "aggregations": {
+        "rank0@北京市": 0,
+        "rank0@天津市": 0,
+        "rank0@山西省": 0,
+        "rank0@江苏省": 0,
+        "rank0@山东省": 0,
+        "rank0@上海市": 0,
+        "rank0@黑龙江省": 0,
+        "rank0@吉林省": 0,
+        "rank0@辽宁省": 0,
+        "rank0@陕西省": 0,
+        "rank0@甘肃省": 0,
+        "rank0@宁夏回族自治区": 0,
+        "rank0@青海省": 0,
+        "rank0@新疆维吾尔自治区": 0,
+        "rank0@新疆生产建设兵团": 0,
+        "rank0@内蒙古自治区": 0,
+        "rank0@河北省": 0,
+        "rank0@安徽省": 0,
+        "rank0@浙江省": 0,
+        "rank0@江西省": 0,
+        "rank0@福建省": 0,
+        "rank0@河南省": 0,
+        "rank0@湖北省": 0,
+        "rank0@湖南省": 0,
+        "rank0@广西壮族自治区": 0,
+        "rank0@广东省": 0,
+        "rank0@海南省": 0,
+        "rank0@云南省": 0,
+        "rank0@贵州省": 0,
+        "rank0@四川省": 0,
+        "rank0@重庆市": 0,
+        "rank0@西藏自治区": 0
+    },
+    "rankings": [{
+        "columns": [{
+                "id": "col0",
+                "desc": {
+                    "type": "aggregate",
+                    "label": "折叠",
+                    "fixed": true,
+                    "width": 50
+                },
+                "width": 50
+            },
+            {
+                "id": "col1",
+                "desc": {
+                    "type": "rank",
+                    "label": "政策序列",
+                    "width": 0.5
+                },
+                "width": 0
+            },
+            {
+                "id": "col2",
+                "desc": "categorical@省份",
+                "width": 130,
+                "groupRenderer": "catdistributionbar",
+                "loaded": true,
+                "filter": null,
+                "colorMapping": null
+            },
+            {
+                "id": "col3",
+                "desc": "string@文件名称",
+                "width": 120
+            },
+            {
+                "id": "col4",
+                "desc": "number@跟进时间",
+                "width": 100,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#622599",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col5",
+                "desc": "number@跟进政策类型",
+                "width": 130,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 35],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#0054a0",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col6",
+                "desc": "number@年完成度",
+                "width": 110,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#aaba0a",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col7",
+                "desc": "number@政策覆盖面",
+                "width": 110,
+                "groupRenderer": "histogram",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [5, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#dd7500",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col8",
+                "desc": "number@创新点",
+                "width": 110,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 15],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#e23d28",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col9",
+                "desc": "number@部门协同",
+                "width": 110,
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 5],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#3d8e33",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col10",
+                "desc": "number@类型分",
+                "width": 100,
+                "label": "类型分",
+                "groupRenderer": "boxplot",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 1],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#7f7f7f",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            },
+            {
+                "id": "col11",
+                "desc": "number@得分",
+                "width": 344,
+                "groupRenderer": "histogram",
+                "summaryRenderer": "histogram",
+                "loaded": true,
+                "map": {
+                    "type": "linear",
+                    "domain": [0, 85],
+                    "range": [0, 1]
+                },
+                "colorMapping": "#3399ff",
+                "filter": null,
+                "groupSortMethod": "median",
+                "stratifyThreshholds": []
+            }
+        ],
+        "sortCriteria": [],
+        "groupSortCriteria": [{
+            "asc": true,
+            "sortBy": "col11"
+        }],
+        "groupColumns": ["col2"]
+    }],
+    "showTopN": 10
+}

@@ -1,0 +1,138 @@
+{
+    "id": "col0",
+    "desc": {
+        "type": "aggregate",
+        "label": "折叠",
+        "fixed": true,
+        "width": 50
+    },
+    "width": 50
+}, {
+    "id": "col1",
+    "desc": {
+        "type": "rank",
+        "label": "政策序列",
+        "width": 80
+    },
+    "width": 80
+}, {
+    "id": "col2",
+    "desc": "categorical@省份",
+    "width": 100,
+    "groupRenderer": "catdistributionbar",
+    "loaded": true,
+    "filter": null,
+    "colorMapping": null
+}, {
+    "id": "col4",
+    "desc": "number@跟进时间",
+    "width": 110,
+    "groupRenderer": "boxplot",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 15],
+        "range": [0, 1]
+    },
+    "colorMapping": "#B7D332",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col5",
+    "desc": "number@跟进政策",
+    "width": 110,
+    "groupRenderer": "boxplot",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 35],
+        "range": [0, 1]
+    },
+    "colorMapping": "#9AC66A",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col6",
+    "desc": "number@年完成度",
+    "width": 110,
+    "groupRenderer": "boxplot",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 15],
+        "range": [0, 1]
+    },
+    "colorMapping": "#D4E5EF",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col7",
+    "desc": "number@政策覆盖",
+    "width": 110,
+    "groupRenderer": "histogram",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [5, 15],
+        "range": [0, 1]
+    },
+    "colorMapping": "#94BFE6",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col8",
+    "desc": "number@创新点",
+    "width": 100,
+    "groupRenderer": "boxplot",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 15],
+        "range": [0, 1]
+    },
+    "colorMapping": "#5F9EA0",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col9",
+    "desc": "number@部门协同",
+    "width": 110,
+    "groupRenderer": "boxplot",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 5],
+        "range": [0, 1]
+    },
+    "colorMapping": "#7F90C8",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}, {
+    "id": "col11",
+    "desc": "number@得分",
+    "width": 344,
+    "groupRenderer": "histogram",
+    "summaryRenderer": "histogram",
+    "loaded": true,
+    "map": {
+        "type": "linear",
+        "domain": [0, 85],
+        "range": [0, 1]
+    },
+    "colorMapping": "#696969",
+    "filter": null,
+    "groupSortMethod": "median",
+    "stratifyThreshholds": []
+}

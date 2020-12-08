@@ -1,0 +1,136 @@
+// 公共样式
+html {
+  overflow: auto;
+  height: 100%;
+}
+body, div, h1, h2, h3, h4, p, ul, ol, form, dl, dt, dd {
+  margin: 0;
+}
+body {
+  background-color: #ffffff;
+}
+.fr {
+  float: right;
+}
+.clear {
+  clear: both;
+}
+.menu-section {
+  position: fixed;
+  i.el-icon-arrow-left,
+  i.el-icon-arrow-right{
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 50%;
+    margin-top: -30px;
+    z-index: 2;
+    width: 12px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    color: #fff;
+    background: #01ACF3;
+    border-radius: 6px;
+  }
+  .left-menu--collapse {
+    left: 59px;
+  }
+  .left-menu {
+    left: 174px;
+  }
+}
+.left-content {
+  width: 180px;
+}
+.left_content--collapse {
+  width: 60px;
+}
+.right_content--collapse {
+  margin-left: 60px;
+  padding: 20px;
+  height: 100%;
+  background: #ffffff;
+  .baseflow-editor-default {
+    width: calc(100% - 100px);
+  }
+}
+.right-content {
+  margin-left: 180px;
+  padding: 20px;
+  height: 100%;
+  background: #ffffff;
+  .baseflow-editor-default {
+    width: calc(100% - 220px);
+  }
+}
+.model-pagination-style {
+  text-align: right;
+  margin-top: 20px;
+}
+.model-pagination-overflow {
+  max-width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+.icon-margin {
+  margin: 0px 5px;
+}
+// 必填样式
+.required-style {
+  .el-form-item__label {
+    &::before {
+      content: '*';
+      color: #F56C6C;
+      margin-right: 4px;
+    }
+  } 
+}
+// 覆盖element样式
+.el-popover {
+  min-width: 50px !important;
+  padding: 10px !important;
+}
+
+.el-table--border tbody td,
+.el-table--border tbody th,
+.el-table--border th {
+  border-right: 1px solid #e8e8e8;
+}
+.el-table--border { 
+  border-left: 1px solid #e8e8e8;
+  border-right: 1px solid #e8e8e8;
+}
+.el-checkbox__input {
+  .is-disabled {
+    .is-checked {
+      .el-checkbox__inner {
+        &::after {
+          border-color: #666;
+        }
+      }
+    }
+  }
+}
+.el-message-box__message p {
+  word-break: break-all;
+}
+
+// .err-message-inform {
+//   color: red;
+//   font-size: 12px;
+//   margin-bottom: 5px;
+// }
+// .form-item__inputbtn {
+//   width: 300px !important;
+//   margin-right: 20px;
+// }
+
+.el-select {
+  .el-select__tags {
+    .el-select__tags-text {
+      width: auto;
+      max-width: 8.2rem;
+    }
+  }
+}

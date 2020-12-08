@@ -1,0 +1,77 @@
+$--color-primary: #01acf3 !default;
+$--color-white: #FFFFFF !default;
+$--color-black: #000000 !default;
+$--color-primary-light-1: mix($--color-white, $--color-primary, 10%) !default;
+$--color-primary-light-2: mix($--color-white, $--color-primary, 20%) !default;
+$--color-primary-light-3: mix($--color-white, $--color-primary, 30%) !default;
+$--color-primary-light-4: mix($--color-white, $--color-primary, 40%) !default;
+$--color-primary-light-5: mix($--color-white, $--color-primary, 50%) !default;
+$--color-primary-light-6: mix($--color-white, $--color-primary, 60%) !default;
+$--color-primary-light-7: mix($--color-white, $--color-primary, 70%) !default;
+$--color-primary-light-8: mix($--color-white, $--color-primary, 80%) !default;
+$--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default;
+
+$--color-success: #61b26c !default;
+$--color-warning: #f89e35 !default;
+$--color-danger: #f16464 !default;
+$--color-info: #999 !default;
+
+$--color-text-primary: #333 !default;
+$--color-text-regular: #666 !default;
+$--color-text-secondary: #999 !default;
+$--color-text-placeholder: #999 !default;
+$--font-color-disabled-base: #ccc !default;
+$--disabled-fill-base: #f7f7f7 !default;
+/* Box-shadow */
+$--box-shadow-base: 0px 1px 7px 0px rgba(0, 0, 0, 0.2) !default;
+$--box-shadow-dark: 0px 1px 7px 0px rgba(0, 0, 0, 0.2) !default;
+$--box-shadow-light: 0px 1px 7px 0px rgba(0, 0, 0, 0.2) !default;
+
+$--border-color-base: #ddd !default;
+$--border-color-light: #e8e8e8 !default;
+$--border-color-lighter: #e8e8e8 !default;
+$--border-color-extra-light: #e8e8e8 !default;
+
+
+
+$--msgbox-bg-color: #fff;
+$--tooltip-border: none;
+
+$--body-bg: none;
+$--nav-bg: $--color-primary;
+$--nav-box-shadow: 0 2px 3px rgba(0,0,0,.5);
+$--top-bar-background-image: none;
+$--nav-title-color: #fff;
+$--top-bar-info-color: #fff;
+$--menu-background-color: #fff;
+$--menu-item-font-color: #fff;
+$--menu-text-color-current: #fff;
+$--content-bg: none;
+$--left-content-bg-color: transparent;
+$--left-content-box-shadow: none;
+
+$--left-menu-icon-fold-color: #909399;
+
+$--el-card-bg-color: #fff;
+$--el-card-box-shadow: $--box-shadow-light;
+
+$--el-tree-bg-color: #fff;
+$--el-tree-node-current-bg-color: $--color-primary-light-9;
+$--button-primary-backbround: $--color-primary;
+$--button-primary-backbround-hover: $--color-primary-light-1;
+$--button-primary-box-shadow: none;
+$--button-default-backbround: #fff;
+$--button-default-backbround-hover: #f4f4f4;
+$--button-default-border-color: #ddd;
+
+$--el-dropdown-menu-bg-color: $--color-white;
+$--el-dropdown-menu-border: none;
+$--el-dialog-border: none;
+
+$--menu-item-active-bg-color: $--color-primary-light-9;
+$--menu-item-active-border-right: none;
+$--border-primary: $--border-color-base;
+$--card-border-outer: $--border-color-lighter;
+$--loading-mask-background-color: rgba(255, 255, 255, .9);
+$--picker-panel-background-color: #fff;
+$--picker-panel-border: none;
