@@ -1,0 +1,993 @@
+diff --git a/node_modules/lineupjs/src/model/internal.js b/node_modules/lineupjs/src/model/internal.js
+index 0a51363..ac381c6 100644
+--- a/node_modules/lineupjs/src/model/internal.js
++++ b/node_modules/lineupjs/src/model/internal.js
+@@ -1,12 +1,12 @@
+ import * as tslib_1 from "tslib";
+-import { schemeCategory10, schemeSet3 } from 'd3-scale-chromatic';
++import { schemeCategory10, schemeSet1, schemeSet2, schemeSet3 } from 'd3-scale-chromatic';
+ import { defaultGroup, ECompareValueType } from '.';
+ import { OrderedSet } from '../internal';
+ import { DEFAULT_COLOR } from './interfaces';
+ /** @internal */
+ export function integrateDefaults(desc, defaults) {
+     if (defaults === void 0) { defaults = {}; }
+-    Object.keys(defaults).forEach(function (key) {
++    Object.keys(defaults).forEach(function(key) {
+         var typed = key;
+         if (typeof desc[typed] === 'undefined') {
+             desc[typed] = defaults[typed];
+@@ -20,7 +20,7 @@ export function patternFunction(pattern) {
+     for (var _i = 1; _i < arguments.length; _i++) {
+         args[_i - 1] = arguments[_i];
+     }
+-    return new (Function.bind.apply(Function, [void 0, 'value'].concat(args, ["\n  const escapedValue = encodeURIComponent(String(value));\n  return `" + pattern + "`;\n "])))();
++    return new(Function.bind.apply(Function, [void 0, 'value'].concat(args, ["\n  const escapedValue = encodeURIComponent(String(value));\n  return `" + pattern + "`;\n "])))();
+ }
+ /** @internal */
+ export function joinGroups(groups) {
+@@ -44,7 +44,7 @@ export function joinGroups(groups) {
+         parents.push.apply(parents, gparents);
+         parents.push(Object.assign({ subGroups: [] }, group));
+     }
+-    parents.slice(1).forEach(function (g, i) {
++    parents.slice(1).forEach(function(g, i) {
+         g.parent = parents[i];
+         g.name = parents[i].name + " \u2229 " + g.name;
+         g.color = g.color !== DEFAULT_COLOR ? g.color : g.parent.color;
+@@ -84,7 +84,7 @@ export function unifyParents(groups) {
+     if (groups.length <= 1) {
+         return groups;
+     }
+-    var toPath = function (group) {
++    var toPath = function(group) {
+         var path = [group];
+         var p = group.parent;
+         while (p) {
+@@ -94,10 +94,10 @@ export function unifyParents(groups) {
+         return path;
+     };
+     var paths = groups.map(toPath);
+-    var isSame = function (a, b) {
++    var isSame = function(a, b) {
+         return (b.name === a.name && b.parent === a.parent && isGroupParent(b) && b.subGroups.length > 0);
+     };
+-    var removeDuplicates = function (level, i) {
++    var removeDuplicates = function(level, i) {
+         var _a;
+         var real = [];
+         while (level.length > 0) {
+@@ -121,7 +121,7 @@ export function unifyParents(groups) {
+         }
+         return real;
+     };
+-    removeDuplicates(paths.map(function (p) { return p[0]; }), 0);
++    removeDuplicates(paths.map(function(p) { return p[0]; }), 0);
+     return groups;
+ }
+ /** @internal */
+@@ -146,7 +146,7 @@ export function groupRoots(groups) {
+  * @internal
+  */
+ export function traverseGroupsDFS(groups, f) {
+-    var traverse = function (v) {
++    var traverse = function(v) {
+         if (f(v) === false) {
+             return;
+         }
+@@ -158,13 +158,13 @@ export function traverseGroupsDFS(groups, f) {
+     roots.forEach(traverse);
+ }
+ // based on https://github.com/d3/d3-scale-chromatic#d3-scale-chromatic
+-var colors = schemeCategory10.concat(schemeSet3);
++var colors = schemeCategory10.concat(schemeSet1).concat(schemeSet2).concat(schemeSet3);
+ /** @internal */
+ export var MAX_COLORS = colors.length;
+ /** @internal */
+ export function colorPool() {
+     var act = 0;
+-    return function () { return colors[(act++) % colors.length]; };
++    return function() { return colors[(act++) % colors.length]; };
+ }
+ /**
+  * @internal
+diff --git a/node_modules/lineupjs/src/provider/ADataProvider.js b/node_modules/lineupjs/src/provider/ADataProvider.js
+index 81ad0f6..4585f8d 100644
+--- a/node_modules/lineupjs/src/provider/ADataProvider.js
++++ b/node_modules/lineupjs/src/provider/ADataProvider.js
+@@ -9,6 +9,7 @@ import { restoreCategoricalColorMapping } from '../model/CategoricalColorMapping
+ import { createColorMappingFunction, colorMappingFunctions } from '../model/ColorMappingFunction';
+ import { createMappingFunction, mappingFunctions } from '../model/MappingFunction';
+ import { convertAggregationState } from './internal';
++
+ function toDirtyReason(ctx) {
+     var primary = ctx.primaryType;
+     switch (primary || '') {
+@@ -24,6 +25,7 @@ function toDirtyReason(ctx) {
+             return [EDirtyReason.UNKNOWN];
+     }
+ }
++
+ function mergeDirtyOrderContext(current, next) {
+     var currentReason = toDirtyReason(current.self);
+     var nextReason = toDirtyReason(next.self);
+@@ -44,8 +46,9 @@ function mergeDirtyOrderContext(current, next) {
+ /**
+  * a basic data provider holding the data and rankings
+  */
+-var ADataProvider = /** @class */ (function (_super) {
++var ADataProvider = /** @class */ (function(_super) {
+     tslib_1.__extends(ADataProvider, _super);
++
+     function ADataProvider(options) {
+         if (options === void 0) { options = {}; }
+         var _this = _super.call(this) || this;
+@@ -80,9 +83,9 @@ var ADataProvider = /** @class */ (function (_super) {
+         _this.typeFactory = _this.createTypeFactory();
+         return _this;
+     }
+-    ADataProvider.prototype.createTypeFactory = function () {
++    ADataProvider.prototype.createTypeFactory = function() {
+         var _this = this;
+-        var factory = (function (d) {
++        var factory = (function(d) {
+             var desc = _this.fromDescRef(d.desc);
+             if (!desc || !desc.type) {
+                 console.warn('cannot restore column dump', d);
+@@ -103,7 +106,7 @@ var ADataProvider = /** @class */ (function (_super) {
+         factory.categoricalColorMappingFunction = restoreCategoricalColorMapping;
+         return factory;
+     };
+-    ADataProvider.prototype.getTypeFactory = function () {
++    ADataProvider.prototype.getTypeFactory = function() {
+         return this.typeFactory;
+     };
+     /**
+@@ -114,7 +117,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      *  * selectionChanged
+      * @returns {string[]}
+      */
+-    ADataProvider.prototype.createEventList = function () {
++    ADataProvider.prototype.createEventList = function() {
+         return _super.prototype.createEventList.call(this).concat([
+             ADataProvider.EVENT_DATA_CHANGED, ADataProvider.EVENT_BUSY,
+             ADataProvider.EVENT_SHOWTOPN_CHANGED,
+@@ -126,7 +129,7 @@ var ADataProvider = /** @class */ (function (_super) {
+             ADataProvider.EVENT_JUMP_TO_NEAREST, ADataProvider.EVENT_GROUP_AGGREGATION_CHANGED
+         ]);
+     };
+-    ADataProvider.prototype.on = function (type, listener) {
++    ADataProvider.prototype.on = function(type, listener) {
+         return _super.prototype.on.call(this, type, listener);
+     };
+     /**
+@@ -134,15 +137,15 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param existing an optional existing ranking to clone
+      * @return the new ranking
+      */
+-    ADataProvider.prototype.pushRanking = function (existing) {
++    ADataProvider.prototype.pushRanking = function(existing) {
+         var r = this.cloneRanking(existing);
+         this.insertRanking(r);
+         return r;
+     };
+-    ADataProvider.prototype.fireBusy = function (busy) {
++    ADataProvider.prototype.fireBusy = function(busy) {
+         this.fire(ADataProvider.EVENT_BUSY, busy);
+     };
+-    ADataProvider.prototype.takeSnapshot = function (col) {
++    ADataProvider.prototype.takeSnapshot = function(col) {
+         var _this = this;
+         this.fireBusy(true);
+         var r = this.cloneRanking();
+@@ -150,7 +153,7 @@ var ADataProvider = /** @class */ (function (_super) {
+         // by convention copy all support types and the first string column
+         var hasString = col.desc.type === 'string';
+         var hasColumn = false;
+-        var toClone = !ranking ? [col] : ranking.children.filter(function (c) {
++        var toClone = !ranking ? [col] : ranking.children.filter(function(c) {
+             if (c === col) {
+                 hasColumn = true;
+                 return true;
+@@ -165,7 +168,7 @@ var ADataProvider = /** @class */ (function (_super) {
+             // maybe a nested one thus not in the top level
+             toClone.push(col);
+         }
+-        toClone.forEach(function (c) {
++        toClone.forEach(function(c) {
+             var clone = _this.clone(c);
+             r.push(clone);
+             if (c === col) {
+@@ -176,24 +179,25 @@ var ADataProvider = /** @class */ (function (_super) {
+         this.fireBusy(false);
+         return r;
+     };
+-    ADataProvider.prototype.insertRanking = function (r, index) {
++    ADataProvider.prototype.insertRanking = function(r, index) {
+         if (index === void 0) { index = this.rankings.length; }
+         this.rankings.splice(index, 0, r);
+         this.forward.apply(this, [r].concat(ADataProvider.FORWARD_RANKING_EVENTS));
+         //delayed reordering per ranking
+         var that = this;
+-        r.on(Ranking.EVENT_DIRTY_ORDER + ".provider", debounce(function () {
++        r.on(Ranking.EVENT_DIRTY_ORDER + ".provider", debounce(function() {
+             that.triggerReorder(r, toDirtyReason(this));
+         }, 100, mergeDirtyOrderContext));
+         this.fire([ADataProvider.EVENT_ADD_RANKING, ADataProvider.EVENT_DIRTY_HEADER, ADataProvider.EVENT_DIRTY_VALUES, ADataProvider.EVENT_DIRTY], r, index);
+         this.triggerReorder(r);
+     };
+-    ADataProvider.prototype.triggerReorder = function (ranking, dirtyReason) {
++    ADataProvider.prototype.triggerReorder = function(ranking, dirtyReason) {
+         var _this = this;
+         this.fireBusy(true);
+         var reason = dirtyReason || [EDirtyReason.UNKNOWN];
+-        Promise.resolve(this.sort(ranking, reason)).then(function (_a) {
+-            var groups = _a.groups, index2pos = _a.index2pos;
++        Promise.resolve(this.sort(ranking, reason)).then(function(_a) {
++            var groups = _a.groups,
++                index2pos = _a.index2pos;
+             if (ranking.getGroupSortCriteria().length === 0) {
+                 groups = unifyParents(groups);
+             }
+@@ -207,7 +211,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param ranking
+      * @returns {boolean}
+      */
+-    ADataProvider.prototype.removeRanking = function (ranking) {
++    ADataProvider.prototype.removeRanking = function(ranking) {
+         var i = this.rankings.indexOf(ranking);
+         if (i < 0) {
+             return false;
+@@ -222,9 +226,9 @@ var ADataProvider = /** @class */ (function (_super) {
+     /**
+      * removes all rankings
+      */
+-    ADataProvider.prototype.clearRankings = function () {
++    ADataProvider.prototype.clearRankings = function() {
+         var _this = this;
+-        this.rankings.forEach(function (ranking) {
++        this.rankings.forEach(function(ranking) {
+             _this.unforward.apply(_this, [ranking].concat(ADataProvider.FORWARD_RANKING_EVENTS));
+             ranking.on(Ranking.EVENT_DIRTY_ORDER + ".provider", null);
+             _this.cleanUpRanking(ranking);
+@@ -233,44 +237,44 @@ var ADataProvider = /** @class */ (function (_super) {
+         this.rankings.splice(0, this.rankings.length);
+         this.fire([ADataProvider.EVENT_REMOVE_RANKING, ADataProvider.EVENT_DIRTY_HEADER, ADataProvider.EVENT_DIRTY_VALUES, ADataProvider.EVENT_DIRTY], null, -1);
+     };
+-    ADataProvider.prototype.clearFilters = function () {
+-        this.rankings.forEach(function (ranking) { return ranking.clearFilters(); });
++    ADataProvider.prototype.clearFilters = function() {
++        this.rankings.forEach(function(ranking) { return ranking.clearFilters(); });
+     };
+     /**
+      * returns a list of all current rankings
+      * @returns {Ranking[]}
+      */
+-    ADataProvider.prototype.getRankings = function () {
++    ADataProvider.prototype.getRankings = function() {
+         return this.rankings.slice();
+     };
+     /**
+      * returns the last ranking for quicker access
+      * @returns {Ranking}
+      */
+-    ADataProvider.prototype.getFirstRanking = function () {
++    ADataProvider.prototype.getFirstRanking = function() {
+         return this.rankings[0] || null;
+     };
+     /**
+      * returns the last ranking for quicker access
+      * @returns {Ranking}
+      */
+-    ADataProvider.prototype.getLastRanking = function () {
++    ADataProvider.prototype.getLastRanking = function() {
+         return this.rankings[this.rankings.length - 1];
+     };
+-    ADataProvider.prototype.ensureOneRanking = function () {
++    ADataProvider.prototype.ensureOneRanking = function() {
+         if (this.rankings.length === 0) {
+             var r = this.pushRanking();
+             this.push(r, createRankDesc());
+         }
+     };
+-    ADataProvider.prototype.destroy = function () {
++    ADataProvider.prototype.destroy = function() {
+         // dummy
+     };
+     /**
+      * hook method for cleaning up a ranking
+      * @param _ranking
+      */
+-    ADataProvider.prototype.cleanUpRanking = function (_ranking) {
++    ADataProvider.prototype.cleanUpRanking = function(_ranking) {
+         // dummy
+     };
+     /**
+@@ -279,7 +283,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param desc the description of the column
+      * @return {Column} the newly created column or null
+      */
+-    ADataProvider.prototype.push = function (ranking, desc) {
++    ADataProvider.prototype.push = function(ranking, desc) {
+         var r = this.create(desc);
+         if (r) {
+             ranking.push(r);
+@@ -294,7 +298,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param desc the description of the column
+      * @return {Column} the newly created column or null
+      */
+-    ADataProvider.prototype.insert = function (ranking, index, desc) {
++    ADataProvider.prototype.insert = function(ranking, index, desc) {
+         var r = this.create(desc);
+         if (r) {
+             ranking.insert(r, index);
+@@ -306,31 +310,29 @@ var ADataProvider = /** @class */ (function (_super) {
+      * creates a new unique id for a column
+      * @returns {string}
+      */
+-    ADataProvider.prototype.nextId = function () {
++    ADataProvider.prototype.nextId = function() {
+         return "col" + this.uid++;
+     };
+-    ADataProvider.prototype.fixDesc = function (desc) {
++    ADataProvider.prototype.fixDesc = function(desc) {
+         var _this = this;
+         //hacks for provider dependent descriptors
+         if (desc.type === 'selection') {
+-            desc.accessor = function (row) { return _this.isSelected(row.i); };
+-            desc.setter = function (index, value) { return value ? _this.select(index) : _this.deselect(index); };
+-            desc.setterAll = function (indices, value) { return value ? _this.selectAll(indices) : _this.deselectAll(indices); };
+-        }
+-        else if (desc.type === 'aggregate') {
+-            desc.isAggregated = function (ranking, group) { return _this.getAggregationState(ranking, group); };
+-            desc.setAggregated = function (ranking, group, value) { return _this.setAggregationState(ranking, group, value); };
++            desc.accessor = function(row) { return _this.isSelected(row.i); };
++            desc.setter = function(index, value) { return value ? _this.select(index) : _this.deselect(index); };
++            desc.setterAll = function(indices, value) { return value ? _this.selectAll(indices) : _this.deselectAll(indices); };
++        } else if (desc.type === 'aggregate') {
++            desc.isAggregated = function(ranking, group) { return _this.getAggregationState(ranking, group); };
++            desc.setAggregated = function(ranking, group, value) { return _this.setAggregationState(ranking, group, value); };
+         }
+         return desc;
+     };
+-    ADataProvider.prototype.cleanDesc = function (desc) {
++    ADataProvider.prototype.cleanDesc = function(desc) {
+         //hacks for provider dependent descriptors
+         if (desc.type === 'selection') {
+             delete desc.accessor;
+             delete desc.setter;
+             delete desc.setterAll;
+-        }
+-        else if (desc.type === 'aggregate') {
++        } else if (desc.type === 'aggregate') {
+             delete desc.isAggregated;
+             delete desc.setAggregated;
+         }
+@@ -341,7 +343,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param desc
+      * @returns {Column} the new column or null if it can't be created
+      */
+-    ADataProvider.prototype.create = function (desc) {
++    ADataProvider.prototype.create = function(desc) {
+         this.fixDesc(desc);
+         //find by type and instantiate
+         var type = this.columnTypes[desc.type];
+@@ -350,7 +352,7 @@ var ADataProvider = /** @class */ (function (_super) {
+         }
+         return null;
+     };
+-    ADataProvider.prototype.instantiateColumn = function (type, id, desc, typeFactory) {
++    ADataProvider.prototype.instantiateColumn = function(type, id, desc, typeFactory) {
+         return new type(id, desc, typeFactory);
+     };
+     /**
+@@ -358,7 +360,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param col
+      * @returns {Column}
+      */
+-    ADataProvider.prototype.clone = function (col) {
++    ADataProvider.prototype.clone = function(col) {
+         var dump = this.dumpColumn(col);
+         return this.restoreColumn(dump);
+     };
+@@ -367,7 +369,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param dump
+      * @returns {Column}
+      */
+-    ADataProvider.prototype.restoreColumn = function (dump) {
++    ADataProvider.prototype.restoreColumn = function(dump) {
+         var c = this.typeFactory(dump);
+         c.assignNewId(this.nextId.bind(this));
+         return c;
+@@ -377,9 +379,9 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param idOrFilter by id or by a filter function
+      * @returns {Column}
+      */
+-    ADataProvider.prototype.find = function (idOrFilter) {
++    ADataProvider.prototype.find = function(idOrFilter) {
+         //convert to function
+-        var filter = typeof (idOrFilter) === 'string' ? function (col) { return col.id === idOrFilter; } : idOrFilter;
++        var filter = typeof(idOrFilter) === 'string' ? function(col) { return col.id === idOrFilter; } : idOrFilter;
+         for (var _i = 0, _a = this.rankings; _i < _a.length; _i++) {
+             var ranking = _a[_i];
+             var r = ranking.find(filter);
+@@ -393,50 +395,50 @@ var ADataProvider = /** @class */ (function (_super) {
+      * dumps this whole provider including selection and the rankings
+      * @returns {{uid: number, selection: number[], rankings: *[]}}
+      */
+-    ADataProvider.prototype.dump = function () {
++    ADataProvider.prototype.dump = function() {
+         var _this = this;
+         return {
+             '$schema': SCHEMA_REF,
+             uid: this.uid,
+             selection: this.getSelection(),
+             aggregations: map2Object(this.aggregations),
+-            rankings: this.rankings.map(function (r) { return r.dump(_this.toDescRef.bind(_this)); }),
++            rankings: this.rankings.map(function(r) { return r.dump(_this.toDescRef.bind(_this)); }),
+             showTopN: this.showTopN
+         };
+     };
+     /**
+      * dumps a specific column
+      */
+-    ADataProvider.prototype.dumpColumn = function (col) {
++    ADataProvider.prototype.dumpColumn = function(col) {
+         return col.dump(this.toDescRef.bind(this));
+     };
+     /**
+      * for better dumping describe reference, by default just return the description
+      */
+-    ADataProvider.prototype.toDescRef = function (desc) {
++    ADataProvider.prototype.toDescRef = function(desc) {
+         return desc;
+     };
+     /**
+      * inverse operation of toDescRef
+      */
+-    ADataProvider.prototype.fromDescRef = function (descRef) {
++    ADataProvider.prototype.fromDescRef = function(descRef) {
+         return descRef;
+     };
+-    ADataProvider.prototype.restoreRanking = function (dump) {
++    ADataProvider.prototype.restoreRanking = function(dump) {
+         var ranking = this.cloneRanking();
+         ranking.restore(dump, this.typeFactory);
+         var idGenerator = this.nextId.bind(this);
+-        ranking.children.forEach(function (c) { return c.assignNewId(idGenerator); });
++        ranking.children.forEach(function(c) { return c.assignNewId(idGenerator); });
+         return ranking;
+     };
+-    ADataProvider.prototype.restore = function (dump) {
++    ADataProvider.prototype.restore = function(dump) {
+         var _this = this;
+         //clean old
+         this.clearRankings();
+         //restore selection
+         this.uid = dump.uid || 0;
+         if (dump.selection) {
+-            dump.selection.forEach(function (s) { return _this.selection.add(s); });
++            dump.selection.forEach(function(s) { return _this.selection.add(s); });
+         }
+         if (dump.showTopN != null) {
+             this.showTopN = dump.showTopN;
+@@ -444,34 +446,33 @@ var ADataProvider = /** @class */ (function (_super) {
+         if (dump.aggregations) {
+             this.aggregations.clear();
+             if (Array.isArray(dump.aggregations)) {
+-                dump.aggregations.forEach(function (a) { return _this.aggregations.set(a, 0); });
+-            }
+-            else {
+-                object2Map(dump.aggregations).forEach(function (v, k) { return _this.aggregations.set(k, v); });
++                dump.aggregations.forEach(function(a) { return _this.aggregations.set(a, 0); });
++            } else {
++                object2Map(dump.aggregations).forEach(function(v, k) { return _this.aggregations.set(k, v); });
+             }
+         }
+         //restore rankings
+         if (dump.rankings) {
+-            dump.rankings.forEach(function (r) {
++            dump.rankings.forEach(function(r) {
+                 var ranking = _this.cloneRanking();
+                 ranking.restore(r, _this.typeFactory);
+                 //if no rank column add one
+-                if (!ranking.children.some(function (d) { return d instanceof RankColumn; })) {
+-                    ranking.insert(_this.create(createRankDesc()), 0);
+-                }
++                // if (!ranking.children.some(function (d) { return d instanceof RankColumn; })) {
++                //     ranking.insert(_this.create(createRankDesc()), 0);
++                // }
+                 _this.insertRanking(ranking);
+             });
+         }
+         //assign new ids
+         var idGenerator = this.nextId.bind(this);
+-        this.rankings.forEach(function (r) {
+-            r.children.forEach(function (c) { return c.assignNewId(idGenerator); });
++        this.rankings.forEach(function(r) {
++            r.children.forEach(function(c) { return c.assignNewId(idGenerator); });
+         });
+     };
+     /**
+      * generates a default ranking by using all column descriptions ones
+      */
+-    ADataProvider.prototype.deriveDefault = function (addSupportType) {
++    ADataProvider.prototype.deriveDefault = function(addSupportType) {
+         var _this = this;
+         if (addSupportType === void 0) { addSupportType = true; }
+         var r = this.pushRanking();
+@@ -482,7 +483,7 @@ var ADataProvider = /** @class */ (function (_super) {
+                 r.push(this.create(createSelectionDesc()));
+             }
+         }
+-        this.getColumns().forEach(function (col) {
++        this.getColumns().forEach(function(col) {
+             var c = _this.create(col);
+             if (!c || isSupportType(c)) {
+                 return;
+@@ -491,20 +492,20 @@ var ADataProvider = /** @class */ (function (_super) {
+         });
+         return r;
+     };
+-    ADataProvider.prototype.isAggregated = function (ranking, group) {
++    ADataProvider.prototype.isAggregated = function(ranking, group) {
+         return this.getTopNAggregated(ranking, group) >= 0;
+     };
+-    ADataProvider.prototype.getAggregationState = function (ranking, group) {
++    ADataProvider.prototype.getAggregationState = function(ranking, group) {
+         var n = this.getTopNAggregated(ranking, group);
+         return n < 0 ? EAggregationState.EXPAND : (n === 0 ? EAggregationState.COLLAPSE : EAggregationState.EXPAND_TOP_N);
+     };
+-    ADataProvider.prototype.setAggregated = function (ranking, group, value) {
++    ADataProvider.prototype.setAggregated = function(ranking, group, value) {
+         return this.setAggregationState(ranking, group, value ? EAggregationState.COLLAPSE : EAggregationState.EXPAND);
+     };
+-    ADataProvider.prototype.setAggregationState = function (ranking, group, value) {
++    ADataProvider.prototype.setAggregationState = function(ranking, group, value) {
+         this.setTopNAggregated(ranking, group, value === EAggregationState.COLLAPSE ? 0 : (value === EAggregationState.EXPAND_TOP_N ? this.showTopN : -1));
+     };
+-    ADataProvider.prototype.getTopNAggregated = function (ranking, group) {
++    ADataProvider.prototype.getTopNAggregated = function(ranking, group) {
+         var g = group;
+         while (g) {
+             var key = ranking.id + "@" + toGroupID(g);
+@@ -520,7 +521,7 @@ var ADataProvider = /** @class */ (function (_super) {
+         }
+         return -1;
+     };
+-    ADataProvider.prototype.unaggregateParents = function (ranking, group) {
++    ADataProvider.prototype.unaggregateParents = function(ranking, group) {
+         var g = group.parent;
+         var changed = false;
+         while (g) {
+@@ -529,10 +530,10 @@ var ADataProvider = /** @class */ (function (_super) {
+         }
+         return changed;
+     };
+-    ADataProvider.prototype.getAggregationStrategy = function () {
++    ADataProvider.prototype.getAggregationStrategy = function() {
+         return this.options.aggregationStrategy;
+     };
+-    ADataProvider.prototype.initAggregateState = function (ranking, groups) {
++    ADataProvider.prototype.initAggregateState = function(ranking, groups) {
+         var initial = -1;
+         switch (this.getAggregationStrategy()) {
+             case 'group':
+@@ -555,7 +556,7 @@ var ADataProvider = /** @class */ (function (_super) {
+             }
+         }
+     };
+-    ADataProvider.prototype.setTopNAggregated = function (ranking, group, value) {
++    ADataProvider.prototype.setTopNAggregated = function(ranking, group, value) {
+         var groups = Array.isArray(group) ? group : [group];
+         var changed = [];
+         var previous = [];
+@@ -573,8 +574,7 @@ var ADataProvider = /** @class */ (function (_super) {
+             var key = ranking.id + "@" + toGroupID(group_1);
+             if (target >= 0) {
+                 this.aggregations.set(key, target);
+-            }
+-            else {
++            } else {
+                 this.aggregations.delete(key);
+             }
+         }
+@@ -585,26 +585,27 @@ var ADataProvider = /** @class */ (function (_super) {
+         if (!Array.isArray(group)) {
+             // single change
+             this.fire([ADataProvider.EVENT_GROUP_AGGREGATION_CHANGED, ADataProvider.EVENT_DIRTY_VALUES, ADataProvider.EVENT_DIRTY], ranking, group, previous.length === 0 ? value : previous[0], value);
+-        }
+-        else {
++        } else {
+             this.fire([ADataProvider.EVENT_GROUP_AGGREGATION_CHANGED, ADataProvider.EVENT_DIRTY_VALUES, ADataProvider.EVENT_DIRTY], ranking, group, previous, value);
+         }
+     };
+-    ADataProvider.prototype.aggregateAllOf = function (ranking, aggregateAll, groups) {
++    ADataProvider.prototype.aggregateAllOf = function(ranking, aggregateAll, groups) {
+         if (groups === void 0) { groups = ranking.getGroups(); }
+         var value = convertAggregationState(aggregateAll, this.showTopN);
+         this.setTopNAggregated(ranking, groups, value);
+     };
+-    ADataProvider.prototype.getShowTopN = function () {
++    ADataProvider.prototype.getShowTopN = function() {
+         return this.showTopN;
+     };
+-    ADataProvider.prototype.setShowTopN = function (value) {
++    ADataProvider.prototype.setShowTopN = function(value) {
+         if (this.showTopN === value) {
+             return;
+         }
+         // update entries
+         for (var _i = 0, _a = Array.from(this.aggregations.entries()); _i < _a.length; _i++) {
+-            var _b = _a[_i], k = _b[0], v = _b[1];
++            var _b = _a[_i],
++                k = _b[0],
++                v = _b[1];
+             if (v === this.showTopN) {
+                 this.aggregations.set(k, value);
+             }
+@@ -616,14 +617,14 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param index
+      * @return {boolean}
+      */
+-    ADataProvider.prototype.isSelected = function (index) {
++    ADataProvider.prototype.isSelected = function(index) {
+         return this.selection.has(index);
+     };
+     /**
+      * also select the given row
+      * @param index
+      */
+-    ADataProvider.prototype.select = function (index) {
++    ADataProvider.prototype.select = function(index) {
+         if (this.selection.has(index)) {
+             return; //no change
+         }
+@@ -633,7 +634,7 @@ var ADataProvider = /** @class */ (function (_super) {
+         this.selection.add(index);
+         this.fire(ADataProvider.EVENT_SELECTION_CHANGED, this.getSelection());
+     };
+-    ADataProvider.prototype.jumpToNearest = function (indices) {
++    ADataProvider.prototype.jumpToNearest = function(indices) {
+         if (indices.length === 0) {
+             return;
+         }
+@@ -643,9 +644,9 @@ var ADataProvider = /** @class */ (function (_super) {
+      * also select all the given rows
+      * @param indices
+      */
+-    ADataProvider.prototype.selectAll = function (indices) {
++    ADataProvider.prototype.selectAll = function(indices) {
+         var _this = this;
+-        if (everyIndices(indices, function (i) { return _this.selection.has(i); })) {
++        if (everyIndices(indices, function(i) { return _this.selection.has(i); })) {
+             return; //no change
+         }
+         if (this.options.singleSelection === true) {
+@@ -653,27 +654,26 @@ var ADataProvider = /** @class */ (function (_super) {
+             if (indices.length > 0) {
+                 this.selection.add(indices[0]);
+             }
+-        }
+-        else {
+-            forEachIndices(indices, function (index) {
++        } else {
++            forEachIndices(indices, function(index) {
+                 _this.selection.add(index);
+             });
+         }
+         this.fire(ADataProvider.EVENT_SELECTION_CHANGED, this.getSelection());
+     };
+-    ADataProvider.prototype.selectAllOf = function (ranking) {
++    ADataProvider.prototype.selectAllOf = function(ranking) {
+         this.setSelection(Array.from(ranking.getOrder()));
+     };
+     /**
+      * set the selection to the given rows
+      * @param indices
+      */
+-    ADataProvider.prototype.setSelection = function (indices) {
++    ADataProvider.prototype.setSelection = function(indices) {
+         var _this = this;
+         if (indices.length === 0) {
+             return this.clearSelection();
+         }
+-        if (this.selection.size === indices.length && indices.every(function (i) { return _this.selection.has(i); })) {
++        if (this.selection.size === indices.length && indices.every(function(i) { return _this.selection.has(i); })) {
+             return; //no change
+         }
+         this.selection.clear();
+@@ -685,21 +685,19 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param additional just this element or all
+      * @returns {boolean} whether the index is currently selected
+      */
+-    ADataProvider.prototype.toggleSelection = function (index, additional) {
++    ADataProvider.prototype.toggleSelection = function(index, additional) {
+         if (additional === void 0) { additional = false; }
+         if (this.isSelected(index)) {
+             if (additional) {
+                 this.deselect(index);
+-            }
+-            else {
++            } else {
+                 this.clearSelection();
+             }
+             return false;
+         }
+         if (additional) {
+             this.select(index);
+-        }
+-        else {
++        } else {
+             this.setSelection([index]);
+         }
+         return true;
+@@ -708,7 +706,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * deselect the given row
+      * @param index
+      */
+-    ADataProvider.prototype.deselect = function (index) {
++    ADataProvider.prototype.deselect = function(index) {
+         if (!this.selection.has(index)) {
+             return; //no change
+         }
+@@ -719,12 +717,12 @@ var ADataProvider = /** @class */ (function (_super) {
+      * also select all the given rows
+      * @param indices
+      */
+-    ADataProvider.prototype.deselectAll = function (indices) {
++    ADataProvider.prototype.deselectAll = function(indices) {
+         var _this = this;
+-        if (everyIndices(indices, function (i) { return !_this.selection.has(i); })) {
++        if (everyIndices(indices, function(i) { return !_this.selection.has(i); })) {
+             return; //no change
+         }
+-        forEachIndices(indices, function (index) {
++        forEachIndices(indices, function(index) {
+             _this.selection.delete(index);
+         });
+         this.fire(ADataProvider.EVENT_SELECTION_CHANGED, this.getSelection());
+@@ -733,7 +731,7 @@ var ADataProvider = /** @class */ (function (_super) {
+      * returns a promise containing the selected rows
+      * @return {Promise<any[]>}
+      */
+-    ADataProvider.prototype.selectedRows = function () {
++    ADataProvider.prototype.selectedRows = function() {
+         if (this.selection.size === 0) {
+             return [];
+         }
+@@ -743,13 +741,13 @@ var ADataProvider = /** @class */ (function (_super) {
+      * returns the currently selected indices
+      * @returns {Array}
+      */
+-    ADataProvider.prototype.getSelection = function () {
++    ADataProvider.prototype.getSelection = function() {
+         return Array.from(this.selection);
+     };
+     /**
+      * clears the selection
+      */
+-    ADataProvider.prototype.clearSelection = function () {
++    ADataProvider.prototype.clearSelection = function() {
+         if (this.selection.size === 0) {
+             return; //no change
+         }
+@@ -762,9 +760,9 @@ var ADataProvider = /** @class */ (function (_super) {
+      * @param options
+      * @returns {Promise<string>}
+      */
+-    ADataProvider.prototype.exportTable = function (ranking, options) {
++    ADataProvider.prototype.exportTable = function(ranking, options) {
+         if (options === void 0) { options = {}; }
+-        return Promise.resolve(this.view(ranking.getOrder())).then(function (data) { return exportRanking(ranking, data, options); });
++        return Promise.resolve(this.view(ranking.getOrder())).then(function(data) { return exportRanking(ranking, data, options); });
+     };
+     ADataProvider.EVENT_SELECTION_CHANGED = 'selectionChanged';
+     ADataProvider.EVENT_DATA_CHANGED = 'dataChanged';
+diff --git a/node_modules/lineupjs/src/ui/dialogs/CategoricalFilterDialog.js b/node_modules/lineupjs/src/ui/dialogs/CategoricalFilterDialog.js
+index 5363ebd..ae4c9ec 100644
+--- a/node_modules/lineupjs/src/ui/dialogs/CategoricalFilterDialog.js
++++ b/node_modules/lineupjs/src/ui/dialogs/CategoricalFilterDialog.js
+@@ -6,8 +6,9 @@ import { forEach } from './utils';
+ import { cssClass, engineCssClass } from '../../styles';
+ import { isCategoryIncluded } from '../../model/internalCategorical';
+ /** @internal */
+-var CategoricalFilterDialog = /** @class */ (function (_super) {
++var CategoricalFilterDialog = /** @class */ (function(_super) {
+     tslib_1.__extends(CategoricalFilterDialog, _super);
++
+     function CategoricalFilterDialog(column, dialog, ctx) {
+         var _this = _super.call(this, dialog, {
+             livePreview: 'filter'
+@@ -17,13 +18,13 @@ var CategoricalFilterDialog = /** @class */ (function (_super) {
+         _this.before = _this.column.getFilter() || { filter: '', filterMissing: false };
+         return _this;
+     }
+-    CategoricalFilterDialog.prototype.build = function (node) {
++    CategoricalFilterDialog.prototype.build = function(node) {
+         var _this = this;
+-        node.insertAdjacentHTML('beforeend', "<div class=\"" + cssClass('dialog-table') + "\">\n        <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input type=\"checkbox\" checked>\n          <span>\n            <span class=\"" + cssClass('dialog-filter-table-color') + "\"></span>\n            <div>Un/Select All</div>\n          </span>\n        </label>\n        " + this.column.categories.map(function (c) { return "<label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input data-cat=\"" + c.name + "\" type=\"checkbox\"" + (isCategoryIncluded(_this.before, c) ? 'checked' : '') + ">\n          <span>\n            <span class=\"" + cssClass('dialog-filter-table-color') + "\" style=\"background-color: " + c.color + "\"></span>\n            <div class=\"" + cssClass('dialog-filter-table-entry-label') + "\">" + c.label + "</div>\n            <div class=\"" + cssClass('dialog-filter-table-entry-stats') + "\"></div>\n          </span>\n        </label>"; }).join('') + "\n    </div>");
++        node.insertAdjacentHTML('beforeend', "<div class=\"" + cssClass('dialog-table') + "\">\n        <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input type=\"checkbox\" checked>\n          <span>\n            <span class=\"" + cssClass('dialog-filter-table-color') + "\"></span>\n            <div>全选/取消</div>\n          </span>\n        </label>\n        " + this.column.categories.map(function(c) { return "<label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input data-cat=\"" + c.name + "\" type=\"checkbox\"" + (isCategoryIncluded(_this.before, c) ? 'checked' : '') + ">\n          <span>\n            <span class=\"" + cssClass('dialog-filter-table-color') + "\" style=\"background-color: " + c.color + "\"></span>\n            <div class=\"" + cssClass('dialog-filter-table-entry-label') + "\">" + c.label + "</div>\n            <div class=\"" + cssClass('dialog-filter-table-entry-stats') + "\"></div>\n          </span>\n        </label>"; }).join('') + "\n    </div>");
+         // selectAll
+         var selectAll = this.findInput('input:not([data-cat])');
+-        selectAll.onchange = function () {
+-            forEach(node, 'input[data-cat]', function (n) { return n.checked = selectAll.checked; });
++        selectAll.onchange = function() {
++            forEach(node, 'input[data-cat]', function(n) { return n.checked = selectAll.checked; });
+         };
+         if (this.column instanceof SetColumn) {
+             var some = this.before.mode !== 'every';
+@@ -35,23 +36,24 @@ var CategoricalFilterDialog = /** @class */ (function (_super) {
+         this.enableLivePreviews('input[type=checkbox],input[type=radio]');
+         var ranking = this.column.findMyRanker();
+         if (ranking) {
+-            ranking.on(Ranking.EVENT_ORDER_CHANGED + ".catFilter", function () { return _this.updateStats(); });
++            ranking.on(Ranking.EVENT_ORDER_CHANGED + ".catFilter", function() { return _this.updateStats(); });
+         }
+         this.updateStats();
+     };
+-    CategoricalFilterDialog.prototype.updateStats = function () {
++    CategoricalFilterDialog.prototype.updateStats = function() {
+         var _this = this;
+-        var ready = this.ctx.provider.getTaskExecutor().summaryCategoricalStats(this.column).then(function (r) {
++        var ready = this.ctx.provider.getTaskExecutor().summaryCategoricalStats(this.column).then(function(r) {
+             if (typeof r === 'symbol') {
+                 return;
+             }
+-            var summary = r.summary, data = r.data;
++            var summary = r.summary,
++                data = r.data;
+             var missing = data ? data.missing : (summary ? summary.missing : 0);
+             updateFilterMissingNumberMarkup(findFilterMissing(_this.node).parentElement, missing);
+             if (!summary || !data) {
+                 return;
+             }
+-            _this.forEach("." + cssClass('dialog-filter-table-entry-stats'), function (n, i) {
++            _this.forEach("." + cssClass('dialog-filter-table-entry-stats'), function(n, i) {
+                 var bin = summary.hist[i];
+                 var raw = data.hist[i];
+                 n.textContent = bin.count + "/" + raw.count;
+@@ -61,11 +63,11 @@ var CategoricalFilterDialog = /** @class */ (function (_super) {
+             return;
+         }
+         this.node.classList.add(engineCssClass('loading'));
+-        ready.then(function () {
++        ready.then(function() {
+             _this.node.classList.remove(engineCssClass('loading'));
+         });
+     };
+-    CategoricalFilterDialog.prototype.updateFilter = function (filter, filterMissing, someMode) {
++    CategoricalFilterDialog.prototype.updateFilter = function(filter, filterMissing, someMode) {
+         if (someMode === void 0) { someMode = false; }
+         var noFilter = filter == null && filterMissing === false;
+         var f = { filter: filter, filterMissing: filterMissing };
+@@ -74,19 +76,19 @@ var CategoricalFilterDialog = /** @class */ (function (_super) {
+         }
+         this.column.setFilter(noFilter ? null : f);
+     };
+-    CategoricalFilterDialog.prototype.reset = function () {
+-        this.forEach('input[data-cat]', function (n) { return n.checked = true; });
++    CategoricalFilterDialog.prototype.reset = function() {
++        this.forEach('input[data-cat]', function(n) { return n.checked = true; });
+         findFilterMissing(this.node).checked = false;
+         var mode = this.findInput('input[value=every]');
+         if (mode) {
+             mode.checked = true;
+         }
+     };
+-    CategoricalFilterDialog.prototype.cancel = function () {
++    CategoricalFilterDialog.prototype.cancel = function() {
+         this.updateFilter(this.before.filter === '' ? null : this.before.filter, this.before.filterMissing, this.before.mode === 'some');
+     };
+-    CategoricalFilterDialog.prototype.submit = function () {
+-        var f = this.forEach('input[data-cat]:checked', function (n) { return n.dataset.cat; });
++    CategoricalFilterDialog.prototype.submit = function() {
++        var f = this.forEach('input[data-cat]:checked', function(n) { return n.dataset.cat; });
+         if (f.length === this.column.categories.length) { // all checked = no filter
+             f = null;
+         }
+@@ -95,7 +97,7 @@ var CategoricalFilterDialog = /** @class */ (function (_super) {
+         this.updateFilter(f, filterMissing, mode != null && mode.checked);
+         return true;
+     };
+-    CategoricalFilterDialog.prototype.cleanUp = function (action) {
++    CategoricalFilterDialog.prototype.cleanUp = function(action) {
+         _super.prototype.cleanUp.call(this, action);
+         var ranking = this.column.findMyRanker();
+         if (ranking) {
+diff --git a/node_modules/lineupjs/src/ui/dialogs/CategoricalMappingFilterDialog.js b/node_modules/lineupjs/src/ui/dialogs/CategoricalMappingFilterDialog.js
+index c851d97..387d095 100644
+--- a/node_modules/lineupjs/src/ui/dialogs/CategoricalMappingFilterDialog.js
++++ b/node_modules/lineupjs/src/ui/dialogs/CategoricalMappingFilterDialog.js
+@@ -6,62 +6,67 @@ import ADialog from './ADialog';
+ import { forEach } from './utils';
+ import { cssClass } from '../../styles';
+ /** @internal */
+-var CategoricalMappingFilterDialog = /** @class */ (function (_super) {
++var CategoricalMappingFilterDialog = /** @class */ (function(_super) {
+     tslib_1.__extends(CategoricalMappingFilterDialog, _super);
++
+     function CategoricalMappingFilterDialog(column, dialog) {
+         var _this = _super.call(this, dialog, {
+             livePreview: 'filter'
+         }) || this;
+         _this.column = column;
+-        _this.before = _this.column.getFilter() || { filter: _this.column.categories.map(function (d) { return d.name; }), filterMissing: false };
++        _this.before = _this.column.getFilter() || { filter: _this.column.categories.map(function(d) { return d.name; }), filterMissing: false };
+         return _this;
+     }
+-    CategoricalMappingFilterDialog.prototype.build = function (node) {
++    CategoricalMappingFilterDialog.prototype.build = function(node) {
+         var _this = this;
+-        var joint = this.column.categories.map(function (d) { return Object.assign({
+-            range: round(d.value * 100, 2)
+-        }, d); });
+-        joint.sort(function (a, b) { return a.label.localeCompare(b.label); });
+-        node.insertAdjacentHTML('beforeend', "<div class=\"" + cssClass('dialog-table') + "\">\n        <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input type=\"checkbox\" checked>\n          <span>\n            <div>Un/Select All</div>\n          </span>\n        </label>\n        " + joint.map(function (cat) { return "\n          <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n            <input data-cat=\"" + cat.name + "\" type=\"checkbox\"" + (isCategoryIncluded(_this.before, cat) ? 'checked' : '') + ">\n            <span>\n              <input type=\"number\" value=\"" + cat.range + "\" min=\"0\" max=\"100\" size=\"5\">\n              <div class=\"" + cssClass('dialog-filter-color-bar') + "\">\n                <span style=\"background-color: " + cat.color + "; width: " + cat.range + "%\"></span>\n              </div>\n              <div>" + cat.label + "</div>\n            </span>\n          </label>"; }).join('') + "\n    </div>");
++        var joint = this.column.categories.map(function(d) {
++            return Object.assign({
++                range: round(d.value * 100, 2)
++            }, d);
++        });
++        joint.sort(function(a, b) { return a.label.localeCompare(b.label); });
++        node.insertAdjacentHTML('beforeend', "<div class=\"" + cssClass('dialog-table') + "\">\n        <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n          <input type=\"checkbox\" checked>\n          <span>\n            <div>全选/取消</div>\n          </span>\n        </label>\n        " + joint.map(function(cat) { return "\n          <label class=\"" + cssClass('checkbox') + " " + cssClass('dialog-filter-table-entry') + "\">\n            <input data-cat=\"" + cat.name + "\" type=\"checkbox\"" + (isCategoryIncluded(_this.before, cat) ? 'checked' : '') + ">\n            <span>\n              <input type=\"number\" value=\"" + cat.range + "\" min=\"0\" max=\"100\" size=\"5\">\n              <div class=\"" + cssClass('dialog-filter-color-bar') + "\">\n                <span style=\"background-color: " + cat.color + "; width: " + cat.range + "%\"></span>\n              </div>\n              <div>" + cat.label + "</div>\n            </span>\n          </label>"; }).join('') + "\n    </div>");
+         // selectAll
+         var selectAll = this.findInput('input[type=checkbox]:not([data-cat])');
+-        selectAll.onchange = function () {
+-            forEach(node, '[data-cat]', function (n) { return n.checked = selectAll.checked; });
++        selectAll.onchange = function() {
++            forEach(node, '[data-cat]', function(n) { return n.checked = selectAll.checked; });
+         };
+-        this.forEach('input[type=number]', function (d) {
+-            d.oninput = function () {
++        this.forEach('input[type=number]', function(d) {
++            d.oninput = function() {
+                 d.nextElementSibling.firstElementChild.style.width = d.value + "%";
+             };
+         });
+         node.insertAdjacentHTML('beforeend', filterMissingMarkup(this.before.filterMissing));
+         this.enableLivePreviews('input[type=checkbox], input[type=number]');
+     };
+-    CategoricalMappingFilterDialog.prototype.updateFilter = function (filter, filterMissing) {
++    CategoricalMappingFilterDialog.prototype.updateFilter = function(filter, filterMissing) {
+         var noFilter = filter == null && filterMissing === false;
+         this.column.setFilter(noFilter ? null : { filter: filter, filterMissing: filterMissing });
+     };
+-    CategoricalMappingFilterDialog.prototype.cancel = function () {
++    CategoricalMappingFilterDialog.prototype.cancel = function() {
+         this.updateFilter(this.before.filter, this.before.filterMissing);
+     };
+-    CategoricalMappingFilterDialog.prototype.reset = function () {
+-        this.forEach('[data-cat]', function (n) {
++    CategoricalMappingFilterDialog.prototype.reset = function() {
++        this.forEach('[data-cat]', function(n) {
+             n.checked = false;
+             n.nextElementSibling.value = '50';
+         });
+     };
+-    CategoricalMappingFilterDialog.prototype.submit = function () {
+-        var items = this.forEach('input[data-cat]', function (n) { return ({
+-            checked: n.checked,
+-            cat: n.dataset.cat,
+-            range: n.nextElementSibling.valueAsNumber
+-        }); });
+-        var f = items.filter(function (d) { return d.checked; }).map(function (d) { return d.cat; });
++    CategoricalMappingFilterDialog.prototype.submit = function() {
++        var items = this.forEach('input[data-cat]', function(n) {
++            return ({
++                checked: n.checked,
++                cat: n.dataset.cat,
++                range: n.nextElementSibling.valueAsNumber
++            });
++        });
++        var f = items.filter(function(d) { return d.checked; }).map(function(d) { return d.cat; });
+         if (f.length === this.column.categories.length) { // all checked = no filter
+             f = null;
+         }
+         var filterMissing = findFilterMissing(this.node).checked;
+         this.updateFilter(f, filterMissing);
+-        this.column.setMapping(items.map(function (d) { return d.range / 100; }));
++        this.column.setMapping(items.map(function(d) { return d.range / 100; }));
+         return true;
+     };
+     return CategoricalMappingFilterDialog;

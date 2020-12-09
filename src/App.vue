@@ -8,7 +8,7 @@
           type="info"
           @click="chartDialogVisible = true"
           class="m-2"
-          >报表<i class="el-icon-edit el-icon--right"></i
+          >报表<i class="el-icon-s-data el-icon--right"></i
         ></el-button>
         <el-button plain type="info" @click="edit" class="m-2"
           >权重方案调整<i class="el-icon-edit el-icon--right"></i
@@ -26,49 +26,13 @@
       <FinalScore :tableData="res" v-model="res"></FinalScore>
     </el-container>
     <el-dialog :title="curProvince" :visible.sync="dialogTableVisible">
-      <!--
-      <el-table :data="curDataWeight">
-        <el-table-column
-          prop="point"
-          label="得分点"
-          width="150"
-        ></el-table-column>
-        <el-table-column
-          prop="score"
-          label="分数"
-          width="200"
-        ></el-table-column>
-        <el-table-column prop="weight" label="权重">
-          <template slot-scope="scope">
-            <div>
-              <el-progress
-                v-model="scope.row.weight"
-                :percentage="scope.row.weight"
-                :color="customColor"
-              ></el-progress>
-              <el-button-group>
-                <el-button
-                  icon="el-icon-minus"
-                  @click="decrease(scope)"
-                ></el-button>
-                <el-button
-                  icon="el-icon-plus"
-                  @click="increase(scope)"
-                ></el-button>
-              </el-button-group>
-            </div> 
-          </template>
-        </el-table-column>
-      </el-table>
-      -->
-      <el-form label-width="120px" :model="curInfo" :label="curInfo.省份">
-        <el-form-item
-          v-for="(item, index) in curInfo"
-          :label="item.key"
-          :key="index"
-        >
-          <el-input v-model="item.val" :placeholder="val"></el-input>
-          <!--<el-button @click.prevent="removevalue(value)">删除</el-button>-->
+      <!-- curinfo 是对象的情况下-->
+      <el-form label-width="120px" :model="curInfo">
+        <el-form-item v-for="(val, key) in curInfo" :label="key" :key="key">
+          <el-input
+            v-model="curInfo[key]"
+            :placeholder="curInfo[key]"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -159,7 +123,6 @@
       :visible.sync="chartDialogVisible"
       width="100rem"
       height="80rem"
-      center="true"
     >
       <ChartView></ChartView>
       <span slot="footer" class="dialog-footer">
@@ -197,8 +160,8 @@ export default {
       res: [],
       lineup: {},
       selectedIdx: [],
-      curInfo: [],
-      curRowIdx:0,
+      curInfo: {},
+      curRowIdx: 0,
       curDataWeight: [],
       curProvince: "",
       dialogTableVisible: false,
@@ -236,13 +199,15 @@ export default {
     },
   },
   methods: {
+    test(item) {
+      alert(item);
+    },
     parsed() {
       // 这边处理完的data是只有分数字段的
 
       //   cchange
       // this.data = JSON.parse(JSON.stringify(Score));
       //  this.columnName = Object.keys(this.data[0]);
-
       this.data = [];
       this.initialData = Object.values(JSON.parse(JSON.stringify(TotalData)));
       this.columnName = Object.keys(this.initialData[0])
@@ -259,42 +224,7 @@ export default {
         this.data.push(obj);
       });
 
-      console.log("this.data", this.data);
-
-      // console.log(
-      //   "this.data",
-      //   this.data.map((el) => el["省份"])
-      // );
-
-      // for (let d of this.data) {
-      //   // console.log(d);
-      //   let tempKeys = Object.keys(d);
-      //   for (let key of tempKeys) {
-      //     if (key !== "省份") d[key] =parseFloat( d[key].toFixed(2))
-      //   }
-      // }
-
-      // cchange
-      // this.data = this.data.slice(0,401)//fail
-      // this.data = this.data.slice(0,402)//fail
-      // this.data = this.data.slice(0,405)//fail
-      this.data = this.data.slice(0,400)//success
-      // this.data = this.data.slice(390,402)//success
-      // this.data = this.data.slice(390,450)//success
-      // this.data = this.data.slice(100,613)//fail
-      // this.data = this.data.slice(150,613)//fail
-      // this.data = this.data.slice(200,613)//success
-      // this.data = this.data.slice(150,613)//fail
-      // this.data = this.data.slice(150,200)//success
-      // this.data = this.data.slice(400,613)//success
-      // this.data = this.data.slice(195,613)//fail
-      // this.data = this.data.slice(197,613)//fail
-
-      // this.data = this.data.slice(195,200)//success
-      // this.data = this.data.slice(0,2).concat(this.data.slice(201,613))//fail 414lines
-
-      // this.data = this.data.slice(198, 614); //success 415lines
-      // this.data = this.data.slice(0,198)
+      // console.log("this.data", this.data);
     },
     getSorted() {
       // let result = new Map()
@@ -307,7 +237,6 @@ export default {
         if (index == 0) {
           result.push(temp);
         } else {
-          // console.log(result.find(target => target.province === el['省份']))
           if (
             result.find((target) => target.province === el["省份"]) != undefined
           ) {
@@ -325,7 +254,8 @@ export default {
       result.sort((a, b) => {
         return b.indexation - a.indexation;
       });
-      this.res = result.slice(0, 10);
+      // this.res = result.slice(0, 10);
+      this.res = result
       //   console.log("result : current ", this.res);
     },
     // viewAble(lineup) {
@@ -377,10 +307,6 @@ export default {
     decrease(scope) {
       let idx = scope.$index;
 
-      console.log("fsjhfds", scope);
-
-      // this.temp = [...this.curDataWeight[idx]]
-      // console.log('this.temp:', this.temp)
       this.curDataWeight[idx].weight -= 20;
       if (this.curDataWeight[idx].weight < 0) {
         this.curDataWeight[idx].weight = 0;
@@ -413,7 +339,6 @@ export default {
         bookSST: true,
         type: "array",
       });
-      console.log(wbout);
       try {
         FileSaver.saveAs(
           new Blob([wbout], {
@@ -528,25 +453,6 @@ export default {
 
       let arr = Dump.rankings[0].columns;
       console.log("arr: thing ", arr);
-      // const p = LineUpJS.LocalDataProvider(this.data, arr); {
-      //     const r = p.pushRanking();
-      //     r.insert(p.create(LineUpJS.createSelectionDesc()), 0);
-      //     r.push(p.create(arr[0]));
-
-      //     r.push((function () {
-      //         const rstack = p.create(LineUpJS.createReduceDesc());
-      //         for (let i = 3; i < 9; i++) {
-      //             rstack.push(p.create(arr[i]));
-
-      //         }
-      //         return rstack;
-      //     })());
-      //     console.log('rrrr:', r)
-      // }
-      // console.log('p:', p)
-
-      // const lineup = LineUpJS.LineUp(contain, p);
-      // lineup.update();
     },
 
     // 改变data的数据，如果scheme改变之后，就在watch中调用
@@ -599,72 +505,46 @@ export default {
       mainSidePanel.insertBefore(newItem, changeScaleView);
     },
 
-
-        // 点击单行数据触发的事件
+    // 点击单行数据触发的事件
     onclickChange() {
       this.lineup.on("selectionChanged", (dataIdx) => {
-        // 先清空已有数据
-        this.curInfo = []
-        // 这边拿到的数据是索引数据，根据其索引去拿到data的数据内容
-        let temp = this.data[dataIdx];
-        for (let i in temp) {
-          console.log("i:", i, temp[i]);
-          if (i == "得分") continue;
-          i == "省份"
-            ? (this.curProvince = temp[i])
-            : this.curInfo.push({ key: i, val: temp[i] });
-        }
-        // todolist
-
-        let tempArr = this.curInfo.splice(0,7)
-        this.curInfo = this.curInfo.concat(tempArr)
-        this.curRowIdx = dataIdx
-        console.log("this curinfo:", this.curInfo);
+        this.curRowIdx = dataIdx;
+        //  curInfo 是对象的情况下
+        this.curInfo = this.data[dataIdx];
+        this.curProvince = this.curInfo["省份"];
 
         // 在这边修改 增删改内容
-
-        // let point = Object.keys(curInfo);
-        // let score = Object.values(curInfo);
-        // console.log(point, score);
-
-        // this.curDataWeight = [];
-        // for (let i = 2; i < 8; i++) {
-        //   let d = {
-        //     point: point[i],
-        //     score: score[i],
-        //     weight: 100,
-        //     finalScore: score[i],
-        //   };
-        //   this.curDataWeight.push(d);
-        // }
         this.dialogTableVisible = true;
-        // console.log("this.curDataWeight:", this.curDataWeight);
       });
-
-      // const buildTaggle = this.lineup.buildTaggle;
-      // lineup.buildTaggle = () => this.viewAble(buildTaggle.call(lineup, contain));
-      // console.log(buildTaggle)
-      // const build = lineup.build;
-      // lineup.build = () => this.viewAble(build.call(lineup, contain));
-      // console.log('lineupBuild:', lineup.build, build)
     },
 
     // 编辑单项政策分的操作
-    editRowData(){
-
-      console.log('get line info',this.curRowIdx)
-      let fileName = this.curInfo[this.curInfo.findIndex(el=>el.key=='文件名称')]
-    
-      console.log('get wenjainmingcheng ',this.curInfo.findIndex(el=>el.key=='文件名称'),fileName.val)
-
+    editRowData() {
+      // 拿到curinfo为对象的情况下
+      const scores = Object.keys(this.curInfo).slice(0,6) //["跟进时间", "跟进政策类型", "年完成度", "政策覆盖面", "创新点", "部门协同"]
+      let fileName = this.curInfo['文件名称']
+      // 计算改变后的得分，重新写入data中
+      let scoreChanged = 0
+      for(let item in scores){
+        let num = this.curInfo[scores[item]]
+        num = (typeof(num) == 'number') ? num : parseFloat(num)
+        scoreChanged += num
+        this.curInfo[scores[item]] = num
+      }
+      this.curInfo['得分'] = scoreChanged * this.curInfo['类型分']
       this.data[this.curRowIdx] = this.curInfo
+      // console.log('changede defen',this.data[this.curRowIdx])
+      
       this.$message({
-          message: `关于${fileName} 文件内容已更新`,
-          type: 'success'
-        });
-      this.lineup.update()
-    }
-
+        message: `关于<<${fileName}>>文件内容已更新`,
+        type: "success",
+      });
+      this.lineup.update();
+      this.dialogTableVisible = false;
+    },
+    cancelEditRowData() {
+      this.dialogTableVisible = false;
+    },
   },
 
   created() {
@@ -719,11 +599,6 @@ export default {
 .el-col {
   height: 100%;
 }
-
-// #weightBox {
-//     height: 50vh;
-//     width: 90%;
-// }
 
 .el-container:nth-child(5) .el-aside,
 .el-container:nth-child(6) .el-aside {

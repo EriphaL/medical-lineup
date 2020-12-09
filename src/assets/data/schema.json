@@ -48,22 +48,13 @@
                 "width": 50
             },
             {
-                "id": "col1",
-                "desc": {
-                    "type": "rank",
-                    "label": "政策序列",
-                    "width": 0.5
-                },
-                "width": 0
-            },
-            {
                 "id": "col2",
                 "desc": "categorical@省份",
                 "width": 130,
                 "groupRenderer": "catdistributionbar",
                 "loaded": true,
                 "filter": null,
-                "colorMapping": null
+                "colorMapping": "#622599"
             },
             {
                 "id": "col3",
@@ -214,6 +205,5 @@
             "sortBy": "col11"
         }],
         "groupColumns": ["col2"]
-    }],
-    "showTopN": 10
+    }]
 }
