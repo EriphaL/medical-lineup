@@ -124,6 +124,7 @@
       :visible.sync="chartDialogVisible"
       width="100rem"
       height="80rem"
+      center
     >
       <ChartView></ChartView>
       <span slot="footer" class="dialog-footer">
