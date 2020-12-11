@@ -2,7 +2,8 @@
   <div id="app">
     <el-container>
       <el-header class="d-flex jc-center ai-center bg-primary b-shadow">
-        <h1 class="flex-1">医保指数平台</h1>
+        <h1 class="flex-1">全国省级医保政策改革指数平台（{{year}}年）</h1>
+
         <el-button
           plain
           type="info"
@@ -179,6 +180,7 @@ export default {
       scheme: {},
       columnName: [],
       initialData: [],
+      year:2019,
     };
   },
   computed: {
